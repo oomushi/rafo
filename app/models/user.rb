@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_presence_of :email
   validates_uniqueness_of :email
-  has_many :icons
-  has_many :quotes
+  has_many :icons,:dependent=>:destroy
+  has_many :quotes,:dependent=>:destroy
   def self.authenticate(email, password)
     user = find_by_email(email)
     if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)

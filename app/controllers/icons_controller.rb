@@ -1,4 +1,7 @@
 class IconsController < ApplicationController
+  before_filter :require_login
+  skip_before_filter :require_login, :only => :show
+  
   # GET /icons
   # GET /icons.json
   def index
@@ -13,18 +16,10 @@ class IconsController < ApplicationController
   # GET /icons/1
   # GET /icons/1.json
   def show
-=begin
     @icon = Icon.find(params[:id])
     send_data(@icon.file,
               :type  => @icon.content_type,
               :disposition => 'inline')
-
-=end
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @icon }
-    end
   end
 
   # GET /icons/new
