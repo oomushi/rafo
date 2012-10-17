@@ -27,7 +27,7 @@ class IconsController < ApplicationController
   # GET /icons/new.json
   def new
     @icon = Icon.new
-
+    @icon.user=@current_user
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @icon }
