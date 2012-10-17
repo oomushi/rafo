@@ -11,14 +11,39 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121017164352) do
+ActiveRecord::Schema.define(:version => 20121017185633) do
 
-  create_table "icons", :force => true do |t|
-    t.integer  "user_id"
+  create_table "blobs", :force => true do |t|
     t.string   "content_type"
     t.binary   "file"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "icons", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "blob_id"
+  end
+
+  create_table "images", :force => true do |t|
+    t.integer  "uy_id"
+    t.integer  "us_id"
+    t.integer  "ux_id"
+    t.integer  "ud_id"
+    t.integer  "sy_id"
+    t.integer  "lx_id"
+    t.integer  "cx_id"
+    t.integer  "rx_id"
+    t.integer  "ry_id"
+    t.integer  "ds_id"
+    t.integer  "dx_id"
+    t.integer  "dr_id"
+    t.integer  "dy_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "user_id"
   end
 
   create_table "quotes", :force => true do |t|

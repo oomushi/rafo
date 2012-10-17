@@ -9,3 +9,4 @@ class CreateIcons < ActiveRecord::Migration
     end
   end
 end
+   
