@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
   before_filter :require_login, :only => :destroy
   def create
-    user = User.authenticate(params[:email], params[:password])
+    user = User.authenticate(params[:username], params[:password])
     if user
       session[:user_id] = user.id
       redirect_to root_url, :notice => "Logged in!"
