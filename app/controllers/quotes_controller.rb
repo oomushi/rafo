@@ -4,8 +4,9 @@ class QuotesController < ApplicationController
   # GET /quotes
   # GET /quotes.json
   def index
-    @quotes = Quote.all
-
+    @quotes=@current_user.quotes
+    @new = Quote.new
+    @new.user=@current_user
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @quotes }
@@ -15,30 +16,15 @@ class QuotesController < ApplicationController
   # GET /quotes/1
   # GET /quotes/1.json
   def show
-    @quote = Quote.find(params[:id])
-
+    @user=User.find_by_username params[:id]
+    redirect_to '/' if @user.nil?
+    @quote = @user.quotes.random
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @quote }
     end
   end
-
-  # GET /quotes/new
-  # GET /quotes/new.json
-  def new
-    @quote = Quote.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @quote }
-    end
-  end
-
-  # GET /quotes/1/edit
-  def edit
-    @quote = Quote.find(params[:id])
-  end
-
+  
   # POST /quotes
   # POST /quotes.json
   def create

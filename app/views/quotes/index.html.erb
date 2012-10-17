@@ -1,25 +1,23 @@
 <h1>Listing quotes</h1>
-
+<% @quotes.clone.push(@new).each do |quote| %>
+  <% if quote.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(quote.errors.count, "error") %> prohibited this quote from being saved:</h2>
+    <ul>
+    <% quote.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+<% end %>
 <table>
   <tr>
-    <th>User</th>
     <th>Text</th>
     <th></th>
-    <th></th>
-    <th></th>
   </tr>
-
+<%= render :partial=>'form', :locals=>{:quote => @new} %>
 <% @quotes.each do |quote| %>
-  <tr>
-    <td><%= quote.user_id %></td>
-    <td><%= quote.text %></td>
-    <td><%= link_to 'Show', quote %></td>
-    <td><%= link_to 'Edit', edit_quote_path(quote) %></td>
-    <td><%= link_to 'Destroy', quote, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
+<%= render :partial=>'form', :locals=>{:quote => quote} %>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New Quote', new_quote_path %>
