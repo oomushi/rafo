@@ -5,7 +5,7 @@ class IconsController < ApplicationController
   # GET /icons
   # GET /icons.json
   def index
-    @icons = Icon.all
+    @icons = @current_user.icons
 
     respond_to do |format|
       format.html # index.html.erb
