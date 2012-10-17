@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  helper_method :current_user
+  before_filter :current_user
 
   private
   def current_user
@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   def require_login
     if @current_user.nil?
       flash[:error] = "You must be logged in to access this section"
-      redirect_to '/'
+      redirect_to '/login'
     end
   end
 end
