@@ -20,8 +20,7 @@ class QuotesController < ApplicationController
     redirect_to '/' if @user.nil?
     @quote = @user.quotes.random
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @quote }
+      format.text { render :text => @quote.text }
     end
   end
   
