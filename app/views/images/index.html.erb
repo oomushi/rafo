@@ -1,0 +1,47 @@
+<h1>Listing images</h1>
+
+<table>
+  <tr>
+    <th>Uy</th>
+    <th>Us</th>
+    <th>Ux</th>
+    <th>Ud</th>
+    <th>Sy</th>
+    <th>Lx</th>
+    <th>Cx</th>
+    <th>Rx</th>
+    <th>Ry</th>
+    <th>Ds</th>
+    <th>Dx</th>
+    <th>Dr</th>
+    <th>Dy</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @images.each do |image| %>
+  <tr>
+    <td><%= image.uy_id %></td>
+    <td><%= image.us_id %></td>
+    <td><%= image.ux_id %></td>
+    <td><%= image.ud_id %></td>
+    <td><%= image.sy_id %></td>
+    <td><%= image.lx_id %></td>
+    <td><%= image.cx_id %></td>
+    <td><%= image.rx_id %></td>
+    <td><%= image.ry_id %></td>
+    <td><%= image.ds_id %></td>
+    <td><%= image.dx_id %></td>
+    <td><%= image.dr_id %></td>
+    <td><%= image.dy_id %></td>
+    <td><%= link_to 'Show', image %></td>
+    <td><%= link_to 'Edit', edit_image_path(image) %></td>
+    <td><%= link_to 'Destroy', image, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Image', new_image_path %>

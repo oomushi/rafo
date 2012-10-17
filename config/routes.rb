@@ -1,4 +1,8 @@
 Rafo::Application.routes.draw do
+  resources :images
+
+  resources :blobs
+
   resources :icons
 
   resources :quotes
