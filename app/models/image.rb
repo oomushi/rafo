@@ -13,6 +13,16 @@ class Image < ActiveRecord::Base
   belongs_to :dx, :class_name=>"Blob", :foreign_key=>"dx_id"
   belongs_to :dr, :class_name=>"Blob", :foreign_key=>"dr_id"
   belongs_to :dy, :class_name=>"Blob", :foreign_key=>"dy_id"
+  
+# probabilmente non servirà a nulla, ma intanto l'ho fatto
+  def method_missing s,*a,&b
+    @parent.send s unless s =~ /^uploaded_data_(.{2})=/ 
+    s="build_#{$1}".to_sym
+    send s, {
+      :file=>a[0].read,
+      :content_type=>a[0].content_type.chomp }
+  end
+  
   def self.random
     if (c = count) != 0
       find(:first, :offset =>rand(c))
