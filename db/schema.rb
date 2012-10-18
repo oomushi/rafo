@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121017185633) do
+ActiveRecord::Schema.define(:version => 20121018173251) do
 
   create_table "blobs", :force => true do |t|
     t.string   "content_type"
@@ -29,15 +29,15 @@ ActiveRecord::Schema.define(:version => 20121017185633) do
 
   create_table "images", :force => true do |t|
     t.integer  "uy_id"
-    t.integer  "us_id"
+    t.integer  "ul_id"
     t.integer  "ux_id"
-    t.integer  "ud_id"
-    t.integer  "sy_id"
+    t.integer  "ur_id"
+    t.integer  "ly_id"
     t.integer  "lx_id"
     t.integer  "cx_id"
     t.integer  "rx_id"
     t.integer  "ry_id"
-    t.integer  "ds_id"
+    t.integer  "dl_id"
     t.integer  "dx_id"
     t.integer  "dr_id"
     t.integer  "dy_id"
