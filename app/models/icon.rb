@@ -3,6 +3,7 @@ class Icon < ActiveRecord::Base
   belongs_to :user
   belongs_to :blob
   validate :right_size?
+  validates_presence_of :blob_id
   
   def uploaded_data= image
     self.build_blob({
@@ -25,8 +26,8 @@ class Icon < ActiveRecord::Base
         errors.add(:uploaded_data, "width to high") if size.width > 128 # parametro da prendere da qualche altra parte
         errors.add(:uploaded_data, "hight to high") if size.height > 128 # parametro da prendere da qualche altra parte
         errors.add(:uploaded_data, "invalid image type") unless ['image/png','image/gif','image/jpeg'].include? image.mime_type # parametro da prendere da qualche altra parte
-      rescue
-        errors.add(:uploaded_data, "invalid file type")
+      rescue => e
+        errors.add(:uploaded_data, "invalid file type"+e.to_s)
       end
     end
   end
