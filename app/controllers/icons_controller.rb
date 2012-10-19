@@ -18,8 +18,8 @@ class IconsController < ApplicationController
   def show
     @user=User.find_by_username params[:id]
     @icon = @user.icons.random
-    send_data(@icon.file,
-              :type  => @icon.content_type,
+    send_data(@icon.blob.file,
+              :type  => @icon.blob.content_type,
               :disposition => 'inline')
   end
 
