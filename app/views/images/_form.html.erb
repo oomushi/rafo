@@ -1,4 +1,4 @@
-<%= form_for(@image) do |f| %>
+<%= form_for(@image,:html => { :multipart => true }) do |f| %>
   <% if @image.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@image.errors.count, "error") %> prohibited this image from being saved:</h2>
@@ -10,58 +10,10 @@
       </ul>
     </div>
   <% end %>
-
+  <%= f.hidden_field :user_id %>
   <div class="field">
-    <%= f.label :uy_id %><br />
-    <%= f.number_field :uy_id %>
-  </div>
-  <div class="field">
-    <%= f.label :us_id %><br />
-    <%= f.number_field :us_id %>
-  </div>
-  <div class="field">
-    <%= f.label :ux_id %><br />
-    <%= f.number_field :ux_id %>
-  </div>
-  <div class="field">
-    <%= f.label :ud_id %><br />
-    <%= f.number_field :ud_id %>
-  </div>
-  <div class="field">
-    <%= f.label :sy_id %><br />
-    <%= f.number_field :sy_id %>
-  </div>
-  <div class="field">
-    <%= f.label :lx_id %><br />
-    <%= f.number_field :lx_id %>
-  </div>
-  <div class="field">
-    <%= f.label :cx_id %><br />
-    <%= f.number_field :cx_id %>
-  </div>
-  <div class="field">
-    <%= f.label :rx_id %><br />
-    <%= f.number_field :rx_id %>
-  </div>
-  <div class="field">
-    <%= f.label :ry_id %><br />
-    <%= f.number_field :ry_id %>
-  </div>
-  <div class="field">
-    <%= f.label :ds_id %><br />
-    <%= f.number_field :ds_id %>
-  </div>
-  <div class="field">
-    <%= f.label :dx_id %><br />
-    <%= f.number_field :dx_id %>
-  </div>
-  <div class="field">
-    <%= f.label :dr_id %><br />
-    <%= f.number_field :dr_id %>
-  </div>
-  <div class="field">
-    <%= f.label :dy_id %><br />
-    <%= f.number_field :dy_id %>
+    <%= f.label :uploaded_pkg %><br />
+    <%= f.file_field :uploaded_pkg %>
   </div>
   <div class="actions">
     <%= f.submit %>
