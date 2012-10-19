@@ -2,8 +2,10 @@ class ImagesController < ApplicationController
   # GET /images
   # GET /images.json
   def index
-    @images = Image.all
-
+    @images = @current_user.images
+    @images.each do |i|
+      i.text=@current_user.quotes.random
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @images }
@@ -13,12 +15,20 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
-    @image = Image.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @image }
+    if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.image_ids.include? params[:id]
+      @image=Image.find params[:id]
+      user=@current_user
+    elsif !@current_user.nil?
+      @image=@current_user.images.random
+      user=@current_user
+    else
+      user=User.find_by_username params[:id]
+      @image=user.images.random
     end
+    @image.text=user.quotes.random
+    send_data(@image.to_img,
+              :type  => 'image/png',
+              :disposition => 'inline')
   end
 
   # GET /images/new
@@ -32,11 +42,6 @@ class ImagesController < ApplicationController
     end
   end
 
-  # GET /images/1/edit
-  def edit
-    @image = Image.find(params[:id])
-  end
-
   # POST /images
   # POST /images.json
   def create
@@ -48,22 +53,6 @@ class ImagesController < ApplicationController
         format.json { render json: @image, status: :created, location: @image }
       else
         format.html { render action: "new" }
-        format.json { render json: @image.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /images/1
-  # PUT /images/1.json
-  def update
-    @image = Image.find(params[:id])
-
-    respond_to do |format|
-      if @image.update_attributes(params[:image])
-        format.html { redirect_to @image, notice: 'Image was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
         format.json { render json: @image.errors, status: :unprocessable_entity }
       end
     end
