@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :username
   has_many :icons,:dependent=>:destroy
   has_many :quotes,:dependent=>:destroy
+  has_many :images,:dependent=>:destroy
   def self.authenticate(user, password)
     user = find_by_username(user)
     if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
