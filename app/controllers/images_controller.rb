@@ -1,4 +1,6 @@
 class ImagesController < ApplicationController
+  before_filter :require_login
+  skip_before_filter :require_login, :only => :show
   # GET /images
   # GET /images.json
   def index
@@ -35,7 +37,7 @@ class ImagesController < ApplicationController
   # GET /images/new.json
   def new
     @image = Image.new
-
+    @image.user=@current_user
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @image }
