@@ -21,6 +21,7 @@ end
 gem 'jquery-rails'
 
 gem 'mini_magick'
+gem 'zipruby'
 
 # To use ActiveModel has_secure_password
 gem "bcrypt-ruby", :require => "bcrypt"
