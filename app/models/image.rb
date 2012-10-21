@@ -28,62 +28,19 @@ class Image < ActiveRecord::Base
   end
   
   def uploaded_pkg= zip
-=begin
- org.macrobug.afo.bean.Image img = new Image();
-      java.util.zip.ZipFile zf = new ZipFile(file);
-      java.util.Enumeration enu = zf.entries();
-      java.util.zip.ZipEntry ze;
-      do
-      {
-        ze = (java.util.zip.ZipEntry)enu.nextElement();
-      } while(!ze.getName().endsWith(".xml") && enu.hasMoreElements());
-      javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
-      dbf.setIgnoringElementContentWhitespace(true);
-      dbf.setIgnoringComments(true);
-      javax.xml.parsers.DocumentBuilder db = dbf.newDocumentBuilder();
-      org.w3c.dom.Document d = db.parse(zf.getInputStream(ze));
-      org.w3c.dom.NodeList n = d.getDocumentElement().getChildNodes();
-      for(int i = 0; i < n.getLength(); i++)
-      {
-        if(n.item(i).getNodeType() != 1)
-        {
-          continue;
-        }
-        ze = zf.getEntry(n.item(i).getAttributes().item(0).getNodeValue());
-        java.lang.String f = ng.getName(ze.getName().substring(ze.getName().lastIndexOf('.')));
-        img.setImg(n.item(i).getAttributes().item(1).getNodeValue().charAt(0), f);
-        java.io.InputStream is = zf.getInputStream(ze);
-        java.io.FileOutputStream fos = new FileOutputStream((new StringBuilder()).append(path).append('/').append(f).toString());
-        for(int b = is.read(); b >= 0; b = is.read())
-        {
-          fos.write(b);
-        }
-
-        fos.flush();
-        fos.close();
-      }
-
-      img.save();
-      return true;
-    }
-    catch(org.xml.sax.SAXException ex)
-    {
-      java.util.logging.Logger.getLogger(Image2Db.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    catch(javax.xml.parsers.ParserConfigurationException ex)
-    {
-      java.util.logging.Logger.getLogger(Image2Db.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    catch(java.util.zip.ZipException ex)
-    {
-      java.util.logging.Logger.getLogger(Image2Db.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    catch(java.io.IOException ex)
-    {
-      java.util.logging.Logger.getLogger(Image2Db.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    return false; 
-=end
+    Zip::Archive.open_buffer(zip.read) do |zf|
+      zf.each do |ze|
+        if ze.name =~ /\.xml$/
+          Hash.from_xml(ze.read)["root"]['img'].each do |img|
+            s="build_#{img['type']}".to_sym
+            send s, {
+              :file=>zf.fopen(img['src']).read,
+              :content_type=>'image/png' }
+          end
+          break
+        end
+      end
+    end
   end
   
   def self.random
@@ -226,4 +183,9 @@ end
 ly lx cx rx ry
    dl dx dr
       dy 
+  a
+ eif
+bjmkc
+ glh
+  d
 =end
