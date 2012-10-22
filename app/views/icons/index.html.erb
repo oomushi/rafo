@@ -1,11 +1,12 @@
 <h1>Listing icons</h1>
 
 <table>
-<% @icons.each do |icon| %>
-  <tr>
+<% @icons.each_with_index do |icon,i| %>
+  <% if i%3==0 %><tr><% end %>
     <td><img src="<%= icon_path icon %>"/><%= link_to '&thinsp; '.html_safe, icon, confirm: 'Are you sure?', method: :delete,:class=>"apice" %></td>
-  </tr>
+  <% if i%3==2 %></tr><% end %>
 <% end %>
+<% if @icons.count%3!=0 %></tr><% end %>
 </table>
 
 <br />
