@@ -16,8 +16,17 @@ class IconsController < ApplicationController
   # GET /icons/1
   # GET /icons/1.json
   def show
-    @user=User.find_by_username params[:id]
-    @icon = @user.icons.random
+    logger.debug "#{params[:id]} into? #{@current_user.icon_ids}: #{@current_user.icon_ids.include? params[:id]}"
+    if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.icon_ids.include? params[:id].to_i
+      @icon=Icon.find params[:id]
+      user=@current_user
+    elsif !@current_user.nil?
+      @icon=@current_user.icons.random
+      user=@current_user
+    else
+      user=User.find_by_username params[:id]
+      @image=user.icons.random
+    end
     send_data(@icon.blob.file,
               :type  => @icon.blob.content_type,
               :disposition => 'inline')

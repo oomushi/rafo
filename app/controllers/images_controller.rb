@@ -17,7 +17,7 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
-    if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.image_ids.include? params[:id]
+    if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.image_ids.include? params[:id].to_i
       @image=Image.find params[:id]
       user=@current_user
     elsif !@current_user.nil?
