@@ -3,7 +3,7 @@
 <table>
 <% @icons.each_with_index do |icon,i| %>
   <% if i%3==0 %><tr><% end %>
-    <td><img src="<%= icon_path icon %>"/><%= link_to '&thinsp; '.html_safe, icon, confirm: 'Are you sure?', method: :delete,:class=>"apice" %></td>
+    <td><img src="<%= icon_path icon %>.png"/><%= link_to '&thinsp; '.html_safe, icon, confirm: 'Are you sure?', method: :delete,:class=>"apice" %></td>
   <% if i%3==2 %></tr><% end %>
 <% end %>
 <% if @icons.count%3!=0 %></tr><% end %>
