@@ -50,7 +50,7 @@ class IconsController < ApplicationController
 
     respond_to do |format|
       if @icon.save
-        format.html { redirect_to @icon, notice: 'Icon was successfully created.' }
+        format.html { redirect_to icons_url, notice: 'Icon was successfully created.' }
         format.json { render json: @icon, status: :created, location: @icon }
       else
         format.html { render action: "new" }
