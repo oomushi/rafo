@@ -53,7 +53,7 @@ class IconsController < ApplicationController
         format.html { redirect_to icons_url, notice: 'Icon was successfully created.' }
         format.json { render json: @icon, status: :created, location: @icon }
       else
-        format.html { render action: "new" }
+        format.html { redirect_to icons_url }
         format.json { render json: @icon.errors, status: :unprocessable_entity }
       end
     end

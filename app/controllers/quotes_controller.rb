@@ -34,7 +34,7 @@ class QuotesController < ApplicationController
         format.html { redirect_to quotes_url, notice: 'Quote was successfully created.' }
         format.json { render json: @quote, status: :created, location: @quote }
       else
-        format.html { render action: "new" }
+        format.html { redirect_to quotes_url }
         format.json { render json: @quote.errors, status: :unprocessable_entity }
       end
     end
@@ -47,10 +47,10 @@ class QuotesController < ApplicationController
 
     respond_to do |format|
       if @quote.update_attributes(params[:quote])
-        format.html { redirect_to @quote, notice: 'Quote was successfully updated.' }
+        format.html { redirect_to quotes_url, notice: 'Quote was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to quotes_url }
         format.json { render json: @quote.errors, status: :unprocessable_entity }
       end
     end
