@@ -48,144 +48,107 @@ class Image < ActiveRecord::Base
       find(:first, :offset =>rand(c))
     end
   end
-  
-  def to_img
-=begin
- try
-    {
-      int w = 0;
-      int h = 0;
-      int mTimeX = 0;
-      int mTimeY = 0;
-      int iTime = 0;
-      int jTime = 0;
-      int kTime = 0;
-      int lTime = 0;
-      org.macrobug.afo.bean.Image img = new Image(id);
-      for(char i = 'a'; i <= 'm'; i++)
-      {
-        if(img.getImgbyChar(i).length() > 0)
-        {
-          hash.put((new StringBuilder()).append("").append(i).toString(), javax.imageio.ImageIO.read(javax.imageio.ImageIO.createImageInputStream(new File((new StringBuilder()).append(path).append("/").append(img.getImgbyChar(i)).toString()))));
-        }
-      }
 
-      java.awt.image.BufferedImage nill = new BufferedImage(1, 1, 6);
-      int i = 0;
-      for(int j = 97; i < 13; j++)
-      {
-        if(!hash.containsKey((new StringBuilder()).append("").append((char)j).toString()))
-        {
-          hash.put((new StringBuilder()).append("").append((char)j).toString(), nill);
-        }
-        i++;
-      }
-
-      mTimeX = (int)java.lang.Math.ceil((1.0D * (double)l) / (double)((java.awt.image.BufferedImage)hash.get("m")).getWidth());
-      mTimeY = (int)java.lang.Math.ceil((1.0D * (double)a) / (double)((java.awt.image.BufferedImage)hash.get("m")).getHeight());
-      int c = mcm(((java.awt.image.BufferedImage)hash.get("m")).getWidth(), mcm(((java.awt.image.BufferedImage)hash.get("l")).getWidth(), ((java.awt.image.BufferedImage)hash.get("i")).getWidth()));
-      int W = (int)((double)c * java.lang.Math.ceil((1.0D * (double)mTimeX * (double)((java.awt.image.BufferedImage)hash.get("m")).getWidth()) / (double)c));
-      c = mcm(((java.awt.image.BufferedImage)hash.get("m")).getHeight(), mcm(((java.awt.image.BufferedImage)hash.get("j")).getHeight(), ((java.awt.image.BufferedImage)hash.get("k")).getHeight()));
-      int H = (int)((double)c * java.lang.Math.ceil((1.0D * (double)mTimeY * (double)((java.awt.image.BufferedImage)hash.get("m")).getHeight()) / (double)c));
-      mTimeX = W / ((java.awt.image.BufferedImage)hash.get("m")).getWidth();
-      mTimeY = H / ((java.awt.image.BufferedImage)hash.get("m")).getHeight();
-      iTime = W / ((java.awt.image.BufferedImage)hash.get("i")).getWidth();
-      lTime = W / ((java.awt.image.BufferedImage)hash.get("l")).getWidth();
-      jTime = H / ((java.awt.image.BufferedImage)hash.get("j")).getHeight();
-      kTime = H / ((java.awt.image.BufferedImage)hash.get("k")).getHeight();
-      int oY = java.lang.Math.max(java.lang.Math.max(((java.awt.image.BufferedImage)hash.get("e")).getHeight(), ((java.awt.image.BufferedImage)hash.get("i")).getHeight()), ((java.awt.image.BufferedImage)hash.get("f")).getHeight());
-      int oB = java.lang.Math.max(java.lang.Math.max(((java.awt.image.BufferedImage)hash.get("g")).getHeight(), ((java.awt.image.BufferedImage)hash.get("l")).getHeight()), ((java.awt.image.BufferedImage)hash.get("h")).getHeight());
-      int oX = java.lang.Math.max(java.lang.Math.max(((java.awt.image.BufferedImage)hash.get("e")).getWidth(), ((java.awt.image.BufferedImage)hash.get("j")).getWidth()), ((java.awt.image.BufferedImage)hash.get("g")).getWidth());
-      int oD = java.lang.Math.max(java.lang.Math.max(((java.awt.image.BufferedImage)hash.get("f")).getWidth(), ((java.awt.image.BufferedImage)hash.get("k")).getWidth()), ((java.awt.image.BufferedImage)hash.get("h")).getWidth());
-      offY = oY + ((java.awt.image.BufferedImage)hash.get("a")).getHeight();
-      int offB = oB + ((java.awt.image.BufferedImage)hash.get("d")).getHeight();
-      offX = oX + ((java.awt.image.BufferedImage)hash.get("c")).getWidth();
-      int offD = oD + ((java.awt.image.BufferedImage)hash.get("b")).getWidth();
-      w = offD + offX + W;
-      h = offY + offB + H;
-      W = java.lang.Math.min(w - ((java.awt.image.BufferedImage)hash.get("a")).getWidth(), w - ((java.awt.image.BufferedImage)hash.get("d")).getWidth()) / 2;
-      H = java.lang.Math.min(h - ((java.awt.image.BufferedImage)hash.get("c")).getHeight(), h - ((java.awt.image.BufferedImage)hash.get("b")).getHeight()) / 2;
-      if(W < 0)
-      {
-        offX -= W;
-        offD -= W - 1;
-        w = java.lang.Math.max(((java.awt.image.BufferedImage)hash.get("a")).getWidth(), ((java.awt.image.BufferedImage)hash.get("d")).getWidth());
-      }
-      if(H < 0)
-      {
-        offY -= H;
-        offB -= H - 1;
-        h = java.lang.Math.max(((java.awt.image.BufferedImage)hash.get("c")).getHeight(), ((java.awt.image.BufferedImage)hash.get("b")).getHeight());
-      }
-      buff = new BufferedImage(w, h, 6);
-      java.awt.Graphics g = buff.getGraphics();
-      g.drawImage((java.awt.Image)hash.get("e"), offX - ((java.awt.image.BufferedImage)hash.get("e")).getWidth(), offY - ((java.awt.image.BufferedImage)hash.get("e")).getHeight(), null);
-      i = 0;
-      for(int I = offX; i < iTime; I += ((java.awt.image.BufferedImage)hash.get("i")).getWidth())
-      {
-        g.drawImage((java.awt.Image)hash.get("i"), I, offY - ((java.awt.image.BufferedImage)hash.get("i")).getHeight(), null);
-        i++;
-      }
-
-      g.drawImage((java.awt.Image)hash.get("f"), w - offD, offY - ((java.awt.image.BufferedImage)hash.get("f")).getHeight(), null);
-      i = 0;
-      for(int I = offY; i < jTime; I += ((java.awt.image.BufferedImage)hash.get("j")).getHeight())
-      {
-        g.drawImage((java.awt.Image)hash.get("j"), offX - ((java.awt.image.BufferedImage)hash.get("j")).getWidth(), I, null);
-        i++;
-      }
-
-      i = offX;
-      for(int I = 0; I < mTimeX; I++)
-      {
-        int j = offY;
-        for(int J = 0; J < mTimeY; J++)
-        {
-          g.drawImage((java.awt.Image)hash.get("m"), i, j, null);
-          j += ((java.awt.image.BufferedImage)hash.get("m")).getHeight();
-        }
-
-        i += ((java.awt.image.BufferedImage)hash.get("m")).getWidth();
-      }
-
-      i = 0;
-      for(int I = offY; i < kTime; I += ((java.awt.image.BufferedImage)hash.get("k")).getHeight())
-      {
-        g.drawImage((java.awt.Image)hash.get("k"), w - offD, I, null);
-        i++;
-      }
-
-      g.drawImage((java.awt.Image)hash.get("g"), offX - ((java.awt.image.BufferedImage)hash.get("g")).getWidth(), h - offB, null);
-      i = 0;
-      for(int I = offX; i < lTime; I += ((java.awt.image.BufferedImage)hash.get("l")).getWidth())
-      {
-        g.drawImage((java.awt.Image)hash.get("l"), I, h - offB, null);
-        i++;
-      }
-
-      g.drawImage((java.awt.Image)hash.get("h"), w - offD, h - offB, null);
-      g.drawImage((java.awt.Image)hash.get("a"), (w - ((java.awt.image.BufferedImage)hash.get("a")).getWidth()) / 2, offY - ((java.awt.image.BufferedImage)hash.get("a")).getHeight() - oY, null);
-      g.drawImage((java.awt.Image)hash.get("c"), offX - ((java.awt.image.BufferedImage)hash.get("c")).getWidth() - oX, (h - ((java.awt.image.BufferedImage)hash.get("c")).getHeight()) / 2, null);
-      g.drawImage((java.awt.Image)hash.get("b"), (w - offD) + oD, (h - ((java.awt.image.BufferedImage)hash.get("b")).getHeight()) / 2, null);
-      g.drawImage((java.awt.Image)hash.get("d"), (w - ((java.awt.image.BufferedImage)hash.get("d")).getWidth()) / 2, (h - offB) + oB, null);
-      buff.flush();
-    }
-    catch(java.io.IOException ioe)
-    {
-      ioe.printStackTrace();
-    } 
-=end
-  end
-end
+###a
+##eif
+#cjmkb
+##glh
+###d
 =begin
        uy
    ul ux ur
 ly lx cx rx ry
    dl dx dr
       dy 
-  a
- eif
-bjmkc
- glh
-  d
 =end
+  def to_img
+=begin
+            int  w    = 0,h= 0;
+            int mTimeX=0,mTimeY = 0,iTime=0,jTime=0,kTime=0,lTime=0;
+            int column,c1,c2,c3,row,row1,row2,row3;
+            DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
+            dbf.setIgnoringElementContentWhitespace(true);
+            dbf.setIgnoringComments(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            d = db.parse(file);
+            NodeList n = d.getDocumentElement().getChildNodes();
+            String path=file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf(java.io.File.separatorChar));
+            for (int i = 0; i < n.getLength(); i++)
+                if(n.item(i).getNodeType()==Node.ELEMENT_NODE)
+                    hash.put(n.item(i).getAttributes().item(1).getNodeValue(),ImageIO.read(ImageIO.createImageInputStream(new File(path+"/"+n.item(i).getAttributes().item(0).getNodeValue()))));
+            
+            BufferedImage nill=new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR);
+            for(int i=0,j=97;i<13;i++,j++)
+               if(!hash.containsKey(""+(char)j))
+                    hash.put(""+(char)j,nill);
+            
+            mTimeX=(int)Math.ceil(1.0*l/hash.get("m").getWidth());
+            mTimeY=(int)Math.ceil(1.0*a/hash.get("m").getHeight());
+            
+            int W= mTimeX*hash.get("m").getWidth().lcm hash.get("l").getWidth().lcm hash.get("i").getWidth()
+            int H= mTimeY*hash.get("m").getHeight().lcm hash.get("j").getHeight().lcm hash.get("k").getHeight()
+            
+            mTimeX=(int)W/hash.get("m").getWidth();
+            mTimeY=(int)H/hash.get("m").getHeight();
+            iTime=(int)W/hash.get("i").getWidth();
+            lTime=(int)W/hash.get("l").getWidth();
+            jTime=(int)H/hash.get("j").getHeight();
+            kTime=(int)H/hash.get("k").getHeight();
+            int oY=max(max(hash.get("e").getHeight(),hash.get("i").getHeight()),hash.get("f").getHeight());
+            int oB=max(max(hash.get("g").getHeight(),hash.get("l").getHeight()),hash.get("h").getHeight());
+            int oX=max(max(hash.get("e").getWidth(),hash.get("j").getWidth()),hash.get("g").getWidth());
+            int oD=max(max(hash.get("f").getWidth(),hash.get("k").getWidth()),hash.get("h").getWidth());
+            offY=oY+hash.get("a").getHeight();
+            int offB=oB+hash.get("d").getHeight();
+            offX=oX+hash.get("c").getWidth();
+            int offD=oD+hash.get("b").getWidth();
+            
+            w=offD+offX+W;
+            h=offY+offB+H;
+            
+            W=min(w-hash.get("a").getWidth(),w-hash.get("d").getWidth())/2;
+            H=min(h-hash.get("c").getHeight(),h-hash.get("b").getHeight())/2;
+            if(W<0){
+                offX-=W;
+                offD-=W-1;
+                w=max(hash.get("a").getWidth(),hash.get("d").getWidth());
+            }
+            if(H<0){
+                offY-=H;
+                offB-=H-1;
+                h=max(hash.get("c").getHeight(),hash.get("b").getHeight());
+            }
+            
+            buff = new BufferedImage(w,h,BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics g=buff.getGraphics();
+            
+            g.drawImage(hash.get("e"),offX-hash.get("e").getWidth(),offY-hash.get("e").getHeight(),null);
+            for(int i=0,I=offX;i<iTime;i++,I+=hash.get("i").getWidth())
+                g.drawImage(hash.get("i"),I,offY-hash.get("i").getHeight(),null);
+            g.drawImage(hash.get("f"),w-offD,offY-hash.get("f").getHeight(),null);
+            for(int i=0,I=offY;i<jTime;i++,I+=hash.get("j").getHeight())
+                g.drawImage(hash.get("j"),offX-hash.get("j").getWidth(),I,null);
+            for(int i=offX,I=0;I<mTimeX;i+=hash.get("m").getWidth(),I++)
+                for(int j=offY,J=0;J<mTimeY;j+=hash.get("m").getHeight(),J++)
+                    g.drawImage(hash.get("m"),i,j,null);
+            for(int i=0,I=offY;i<kTime;i++,I+=hash.get("k").getHeight())
+                g.drawImage(hash.get("k"),w-offD,I,null);
+            g.drawImage(hash.get("g"),offX-hash.get("g").getWidth(),h-offB,null);
+            for(int i=0,I=offX;i<lTime;i++,I+=hash.get("l").getWidth())
+                g.drawImage(hash.get("l"),I,h-offB,null);
+            g.drawImage(hash.get("h"),w-offD,h-offB,null);
+            g.drawImage(hash.get("a"),(w-hash.get("a").getWidth())/2,offY-hash.get("a").getHeight()-oY,null);
+            g.drawImage(hash.get("c"),offX-hash.get("c").getWidth()-oX,(h-hash.get("c").getHeight())/2,null);
+            g.drawImage(hash.get("b"),w-offD+oD,(h-hash.get("b").getHeight())/2,null);
+            g.drawImage(hash.get("d"),(w-hash.get("d").getWidth())/2,h-offB+oB,null);
+            buff.flush();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (ParserConfigurationException ex) {
+            ex.printStackTrace();
+        } catch (SAXException ex) {
+            ex.printStackTrace();
+        }
+=end
+  end
+end
