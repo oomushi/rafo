@@ -1,17 +1,16 @@
 // Place all the styles related to the icons controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-a.apice{
+a.apice {
   margin-left: -16px;
   opacity: 0.5;
   padding: 0 16px 0 0;
   vertical-align: top;
   background: transparent url('/assets/delete.png') repeat-y scroll left bottom;
-  text-decoration:none;
-
-}
-a.apice:hover{
-  opacity:1;
-  color: inherit;
-  background: transparent url('/assets/delete.png') repeat-y scroll left bottom;
+  text-decoration: none;
+  &:hover {
+    opacity: 1;
+    color: inherit;
+    background: transparent url('/assets/delete.png') repeat-y scroll left bottom;
+  }
 }
