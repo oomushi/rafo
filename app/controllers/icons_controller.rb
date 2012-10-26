@@ -47,13 +47,15 @@ class IconsController < ApplicationController
   # POST /icons.json
   def create
     @icon = Icon.new(params[:icon])
-
     respond_to do |format|
       if @icon.save
         format.html { redirect_to icons_url, notice: 'Icon was successfully created.' }
         format.json { render json: @icon, status: :created, location: @icon }
       else
-        format.html { redirect_to icons_url }
+        format.html {
+          flash[:error] = @icon.errors.messages[@icon.errors.messages.keys.first].first
+          redirect_to icons_url
+        }
         format.json { render json: @icon.errors, status: :unprocessable_entity }
       end
     end

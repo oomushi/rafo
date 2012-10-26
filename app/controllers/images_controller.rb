@@ -54,7 +54,10 @@ class ImagesController < ApplicationController
         format.html { redirect_to images_url, notice: 'Image was successfully created.' }
         format.json { render json: @image, status: :created, location: @image }
       else
-        format.html { redirect_to images_url }
+        format.html {
+          flash[:error] = @image.errors.messages[@image.errors.messages.keys.first].first
+          redirect_to images_url
+        }
         format.json { render json: @image.errors, status: :unprocessable_entity }
       end
     end

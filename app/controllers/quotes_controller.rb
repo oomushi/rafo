@@ -34,7 +34,10 @@ class QuotesController < ApplicationController
         format.html { redirect_to quotes_url, notice: 'Quote was successfully created.' }
         format.json { render json: @quote, status: :created, location: @quote }
       else
-        format.html { redirect_to quotes_url }
+        format.html {
+          flash[:error] = @quote.errors.messages[@quote.errors.messages.keys.first].first
+          redirect_to quotes_url
+        }
         format.json { render json: @quote.errors, status: :unprocessable_entity }
       end
     end
