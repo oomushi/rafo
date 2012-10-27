@@ -33,6 +33,7 @@ class Image < ActiveRecord::Base
         if ze.name =~ /\.xml$/
           Hash.from_xml(ze.read)["root"]['img'].each do |img|
             s="build_#{img['type']}".to_sym
+            raise "file not correct"+s unless methods.include? s # TODO gestire questa eccezione
             send s, {
               :file=>zf.fopen(img['src']).read,
               :content_type=>'image/png' }
@@ -56,7 +57,7 @@ class Image < ActiveRecord::Base
 ly lx cx rx ry
    dl dx dr
       dy )
-    hash.map! do |i|
+    a=hash.map do |i|
       img=self.send i.to_sym
       if img.nil?
         Magick::Image.new 1,1,Magick::HatchFill.new('#0000')
@@ -64,9 +65,10 @@ ly lx cx rx ry
         Magick::Image.read_inline(Base64.encode64 img.file).first
       end
     end
-    l,a=100,50 # TODO da ricavare
-    mTimeX=(1.0*l/hash[:cx].columns).ceil
-    mTimeY=(1.0*l/hash[:cx].rows).ceil
+    hash = Hash[hash.zip(a)]
+    l,a=100,300 # TODO da ricavare
+    mTimeX=(1.0*l/hash["cx"].columns).ceil
+    mTimeY=(1.0*a/hash["cx"].rows).ceil
     w=mTimeX*hash["cx"].columns.lcm(hash["dx"].columns.lcm hash["ux"].columns)
     h=mTimeY*hash["cx"].rows.lcm( hash["lx"].rows.lcm hash["rx"].rows)
     mTimeX=w/hash["cx"].columns
@@ -75,59 +77,68 @@ ly lx cx rx ry
     lTime=w/hash["dx"].columns
     jTime=h/hash["lx"].rows
     kTime=h/hash["rx"].rows
-=begin        
-            
-            
-            
-            int oY=max(max(hash["ul"].rows,hash["ux"].rows),hash["ur"].rows)
-            int oB=max(max(hash["dl"].rows,hash["dx"].rows),hash["dr"].rows)
-            int oX=max(max(hash["ul"].columns,hash["lx"].columns),hash["dl"].columns)
-            int oD=max(max(hash["ur"].columns,hash["rx"].columns),hash["dr"].columns)
-            offY=oY+hash["uy"].rows
-            int offB=oB+hash["dy"].rows
-            offX=oX+hash["ly"].columns
-            int offD=oD+hash["ry"].columns
-            
-            w=offD+offX+w
-            h=offY+offB+h
-            
-            w=min(w-hash["uy"].columns,w-hash["dy"].columns)/2
-            h=min(h-hash["ly"].rows,h-hash["ry"].rows)/2
-            if(w<0){
-                offX-=w
-                offD-=w-1
-                w=max(hash["uy"].columns,hash["dy"].columns)
-            }
-            if(h<0){
-                offY-=h
-                offB-=h-1
-                h=max(hash["ly"].rows,hash["ry"].rows)
-            }
-            
-            buff = new BufferedImage(w,h,BufferedImage.TYPE_4BYTE_ABGR)
-            Graphics g=buff.getGraphics()
-            
-            g.drawImage(hash["ul"],offX-hash["ul"].columns,offY-hash["ul"].rows,null)
-            for(int i=0,I=offX;i<iTime;i++,I+=hash["ux"].columns)
-                g.drawImage(hash["ux"],I,offY-hash["ux"].rows,null)
-            g.drawImage(hash["ur"],w-offD,offY-hash["ur"].rows,null)
-            for(int i=0,I=offY;i<jTime;i++,I+=hash["lx"].rows)
-                g.drawImage(hash["lx"],offX-hash["lx"].columns,I,null)
-            for(int i=offX,I=0;I<mTimeX;i+=hash["cx"].columns,I++)
-                for(int j=offY,J=0;J<mTimeY;j+=hash["cx"].rows,J++)
-                    g.drawImage(hash["cx"],i,j,null)
-            for(int i=0,I=offY;i<kTime;i++,I+=hash["rx"].rows)
-                g.drawImage(hash["rx"],w-offD,I,null)
-            g.drawImage(hash["dl"],offX-hash["dl"].columns,h-offB,null)
-            for(int i=0,I=offX;i<lTime;i++,I+=hash["dx"].columns)
-                g.drawImage(hash["dx"],I,h-offB,null)
-            g.drawImage(hash["dr"],w-offD,h-offB,null)
-            g.drawImage(hash["uy"],(w-hash["uy"].columns)/2,offY-hash["uy"].rows-oY,null)
-            g.drawImage(hash["ly"],offX-hash["ly"].columns-oX,(h-hash["ly"].rows)/2,null)
-            g.drawImage(hash["ry"],w-offD+oD,(h-hash["ry"].rows)/2,null)
-            g.drawImage(hash["dy"],(w-hash["dy"].columns)/2,h-offB+oB,null)
-            buff.flush()
-=end
-    Magick::Image.new(1,1,Magick::HatchFill.new('#0000')).first.to_blob
+    oY=[[hash["ul"].rows,hash["ux"].rows].max,hash["ur"].rows].max
+    oB=[[hash["dl"].rows,hash["dx"].rows].max,hash["dr"].rows].max
+    oX=[[hash["ul"].columns,hash["lx"].columns].max,hash["dl"].columns].max
+    oD=[[hash["ur"].columns,hash["rx"].columns].max,hash["dr"].columns].max
+    offY=oY+hash["uy"].rows
+    offB=oB+hash["dy"].rows
+    offX=oX+hash["ly"].columns
+    offD=oD+hash["ry"].columns
+    w+=offD+offX
+    h+=offY+offB
+    w=[w-hash["uy"].columns,w-hash["dy"].columns].min/2
+    h=[h-hash["ly"].rows,h-hash["ry"].rows].min/2
+    if w<0
+      offX-=w
+      offD-=w-1
+      w=[hash["uy"].columns,hash["dy"].columns].max
+    end
+    if h<0
+      offY-=h
+      offB-=h-1
+      h=[hash["ly"].rows,hash["ry"].rows].max
+    end
+    buff=Magick::Image.new w,h,Magick::HatchFill.new('#0000')
+    buff.composite! hash["ul"],offX-hash["ul"].columns,offY-hash["ul"].rows, Magick::OverCompositeOp
+    i=offX
+    iTime.times do
+      buff.composite! hash["ux"],i, offY-hash["ux"].rows, Magick::OverCompositeOp 
+      i+=hash["ux"].columns
+    end
+    buff.composite! hash["ur"],w- offD,offY-hash["ur"].rows, Magick::OverCompositeOp
+    i=offY
+    jTime.times do
+      buff.composite! hash["lx"],offX-hash["lx"].columns,i, Magick::OverCompositeOp
+      i+=hash["lx"].rows
+    end
+    i=offX
+    mTimeX.times do
+      j=offY
+      mTimeY.times do
+        buff.composite! hash["cx"],i,j, Magick::OverCompositeOp
+        j+=hash["cx"].rows
+      end
+      i+=hash["cx"].columns
+    end
+    i=offY
+    kTime.times do
+      buff.composite! hash["rx"],w-offD,i, Magick::OverCompositeOp
+      i+=hash["rx"].rows
+    end
+    buff.composite! hash["dl"],offX-hash["dl"].columns,h-offB, Magick::OverCompositeOp
+    i=offX
+    lTime.times do
+      buff.composite! hash["dx"],i,h-offB, Magick::OverCompositeOp
+      i+=hash["dx"].columns
+    end
+    buff.composite! hash["dr"],w-offD,h-offB, Magick::OverCompositeOp
+    buff.composite! hash["uy"],(w-hash["uy"].columns)/2,offY-hash["uy"].rows-oY, Magick::OverCompositeOp
+    buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h-hash["ly"].rows)/2, Magick::OverCompositeOp
+    buff.composite! hash["ry"],w-offD+oD,(h-hash["ry"].rows)/2, Magick::OverCompositeOp
+    buff.composite! hash["dy"],(w-hash["dy"].columns)/2,h-offB+oB, Magick::OverCompositeOp
+    # TODO scrivere testo
+    buff.format='PNG'
+    buff.to_blob
   end
 end
