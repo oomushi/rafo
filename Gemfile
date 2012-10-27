@@ -20,7 +20,7 @@ end
 
 gem 'jquery-rails'
 
-gem 'mini_magick'
+gem 'rmagick', :require => 'RMagick'
 gem 'zipruby'
 
 # To use ActiveModel has_secure_password
