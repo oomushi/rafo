@@ -49,106 +49,85 @@ class Image < ActiveRecord::Base
     end
   end
 
-###a
-##eif
-#cjmkb
-##glh
-###d
-=begin
-       uy
+  def to_img
+    hash=%w(
+      uy
    ul ux ur
 ly lx cx rx ry
    dl dx dr
-      dy 
-=end
-  def to_img
-=begin
-            int  w    = 0,h= 0;
-            int mTimeX=0,mTimeY = 0,iTime=0,jTime=0,kTime=0,lTime=0;
-            int column,c1,c2,c3,row,row1,row2,row3;
-            DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
-            dbf.setIgnoringElementContentWhitespace(true);
-            dbf.setIgnoringComments(true);
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            d = db.parse(file);
-            NodeList n = d.getDocumentElement().getChildNodes();
-            String path=file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf(java.io.File.separatorChar));
-            for (int i = 0; i < n.getLength(); i++)
-                if(n.item(i).getNodeType()==Node.ELEMENT_NODE)
-                    hash.put(n.item(i).getAttributes().item(1).getNodeValue(),ImageIO.read(ImageIO.createImageInputStream(new File(path+"/"+n.item(i).getAttributes().item(0).getNodeValue()))));
+      dy )
+    hash.map! do |i|
+      img=self.send i.to_sym
+      if img.nil?
+        Magick::Image.new 1,1,Magick::HatchFill.new('#0000')
+      else
+        Magick::Image.read_inline(Base64.encode64 img.file).first
+      end
+    end
+    l,a=100,50 # TODO da ricavare
+    mTimeX=(1.0*l/hash[:cx].columns).ceil
+    mTimeY=(1.0*l/hash[:cx].rows).ceil
+    w=mTimeX*hash["cx"].columns.lcm(hash["dx"].columns.lcm hash["ux"].columns)
+    h=mTimeY*hash["cx"].rows.lcm( hash["lx"].rows.lcm hash["rx"].rows)
+    mTimeX=w/hash["cx"].columns
+    mTimeY=h/hash["cx"].rows
+    iTime=w/hash["ux"].columns
+    lTime=w/hash["dx"].columns
+    jTime=h/hash["lx"].rows
+    kTime=h/hash["rx"].rows
+=begin        
             
-            BufferedImage nill=new BufferedImage(1,1,BufferedImage.TYPE_4BYTE_ABGR);
-            for(int i=0,j=97;i<13;i++,j++)
-               if(!hash.containsKey(""+(char)j))
-                    hash.put(""+(char)j,nill);
             
-            mTimeX=(int)Math.ceil(1.0*l/hash.get("m").getWidth());
-            mTimeY=(int)Math.ceil(1.0*a/hash.get("m").getHeight());
             
-            int W= mTimeX*hash.get("m").getWidth().lcm hash.get("l").getWidth().lcm hash.get("i").getWidth()
-            int H= mTimeY*hash.get("m").getHeight().lcm hash.get("j").getHeight().lcm hash.get("k").getHeight()
+            int oY=max(max(hash["ul"].rows,hash["ux"].rows),hash["ur"].rows)
+            int oB=max(max(hash["dl"].rows,hash["dx"].rows),hash["dr"].rows)
+            int oX=max(max(hash["ul"].columns,hash["lx"].columns),hash["dl"].columns)
+            int oD=max(max(hash["ur"].columns,hash["rx"].columns),hash["dr"].columns)
+            offY=oY+hash["uy"].rows
+            int offB=oB+hash["dy"].rows
+            offX=oX+hash["ly"].columns
+            int offD=oD+hash["ry"].columns
             
-            mTimeX=(int)W/hash.get("m").getWidth();
-            mTimeY=(int)H/hash.get("m").getHeight();
-            iTime=(int)W/hash.get("i").getWidth();
-            lTime=(int)W/hash.get("l").getWidth();
-            jTime=(int)H/hash.get("j").getHeight();
-            kTime=(int)H/hash.get("k").getHeight();
-            int oY=max(max(hash.get("e").getHeight(),hash.get("i").getHeight()),hash.get("f").getHeight());
-            int oB=max(max(hash.get("g").getHeight(),hash.get("l").getHeight()),hash.get("h").getHeight());
-            int oX=max(max(hash.get("e").getWidth(),hash.get("j").getWidth()),hash.get("g").getWidth());
-            int oD=max(max(hash.get("f").getWidth(),hash.get("k").getWidth()),hash.get("h").getWidth());
-            offY=oY+hash.get("a").getHeight();
-            int offB=oB+hash.get("d").getHeight();
-            offX=oX+hash.get("c").getWidth();
-            int offD=oD+hash.get("b").getWidth();
+            w=offD+offX+w
+            h=offY+offB+h
             
-            w=offD+offX+W;
-            h=offY+offB+H;
-            
-            W=min(w-hash.get("a").getWidth(),w-hash.get("d").getWidth())/2;
-            H=min(h-hash.get("c").getHeight(),h-hash.get("b").getHeight())/2;
-            if(W<0){
-                offX-=W;
-                offD-=W-1;
-                w=max(hash.get("a").getWidth(),hash.get("d").getWidth());
+            w=min(w-hash["uy"].columns,w-hash["dy"].columns)/2
+            h=min(h-hash["ly"].rows,h-hash["ry"].rows)/2
+            if(w<0){
+                offX-=w
+                offD-=w-1
+                w=max(hash["uy"].columns,hash["dy"].columns)
             }
-            if(H<0){
-                offY-=H;
-                offB-=H-1;
-                h=max(hash.get("c").getHeight(),hash.get("b").getHeight());
+            if(h<0){
+                offY-=h
+                offB-=h-1
+                h=max(hash["ly"].rows,hash["ry"].rows)
             }
             
-            buff = new BufferedImage(w,h,BufferedImage.TYPE_4BYTE_ABGR);
-            Graphics g=buff.getGraphics();
+            buff = new BufferedImage(w,h,BufferedImage.TYPE_4BYTE_ABGR)
+            Graphics g=buff.getGraphics()
             
-            g.drawImage(hash.get("e"),offX-hash.get("e").getWidth(),offY-hash.get("e").getHeight(),null);
-            for(int i=0,I=offX;i<iTime;i++,I+=hash.get("i").getWidth())
-                g.drawImage(hash.get("i"),I,offY-hash.get("i").getHeight(),null);
-            g.drawImage(hash.get("f"),w-offD,offY-hash.get("f").getHeight(),null);
-            for(int i=0,I=offY;i<jTime;i++,I+=hash.get("j").getHeight())
-                g.drawImage(hash.get("j"),offX-hash.get("j").getWidth(),I,null);
-            for(int i=offX,I=0;I<mTimeX;i+=hash.get("m").getWidth(),I++)
-                for(int j=offY,J=0;J<mTimeY;j+=hash.get("m").getHeight(),J++)
-                    g.drawImage(hash.get("m"),i,j,null);
-            for(int i=0,I=offY;i<kTime;i++,I+=hash.get("k").getHeight())
-                g.drawImage(hash.get("k"),w-offD,I,null);
-            g.drawImage(hash.get("g"),offX-hash.get("g").getWidth(),h-offB,null);
-            for(int i=0,I=offX;i<lTime;i++,I+=hash.get("l").getWidth())
-                g.drawImage(hash.get("l"),I,h-offB,null);
-            g.drawImage(hash.get("h"),w-offD,h-offB,null);
-            g.drawImage(hash.get("a"),(w-hash.get("a").getWidth())/2,offY-hash.get("a").getHeight()-oY,null);
-            g.drawImage(hash.get("c"),offX-hash.get("c").getWidth()-oX,(h-hash.get("c").getHeight())/2,null);
-            g.drawImage(hash.get("b"),w-offD+oD,(h-hash.get("b").getHeight())/2,null);
-            g.drawImage(hash.get("d"),(w-hash.get("d").getWidth())/2,h-offB+oB,null);
-            buff.flush();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (ParserConfigurationException ex) {
-            ex.printStackTrace();
-        } catch (SAXException ex) {
-            ex.printStackTrace();
-        }
+            g.drawImage(hash["ul"],offX-hash["ul"].columns,offY-hash["ul"].rows,null)
+            for(int i=0,I=offX;i<iTime;i++,I+=hash["ux"].columns)
+                g.drawImage(hash["ux"],I,offY-hash["ux"].rows,null)
+            g.drawImage(hash["ur"],w-offD,offY-hash["ur"].rows,null)
+            for(int i=0,I=offY;i<jTime;i++,I+=hash["lx"].rows)
+                g.drawImage(hash["lx"],offX-hash["lx"].columns,I,null)
+            for(int i=offX,I=0;I<mTimeX;i+=hash["cx"].columns,I++)
+                for(int j=offY,J=0;J<mTimeY;j+=hash["cx"].rows,J++)
+                    g.drawImage(hash["cx"],i,j,null)
+            for(int i=0,I=offY;i<kTime;i++,I+=hash["rx"].rows)
+                g.drawImage(hash["rx"],w-offD,I,null)
+            g.drawImage(hash["dl"],offX-hash["dl"].columns,h-offB,null)
+            for(int i=0,I=offX;i<lTime;i++,I+=hash["dx"].columns)
+                g.drawImage(hash["dx"],I,h-offB,null)
+            g.drawImage(hash["dr"],w-offD,h-offB,null)
+            g.drawImage(hash["uy"],(w-hash["uy"].columns)/2,offY-hash["uy"].rows-oY,null)
+            g.drawImage(hash["ly"],offX-hash["ly"].columns-oX,(h-hash["ly"].rows)/2,null)
+            g.drawImage(hash["ry"],w-offD+oD,(h-hash["ry"].rows)/2,null)
+            g.drawImage(hash["dy"],(w-hash["dy"].columns)/2,h-offB+oB,null)
+            buff.flush()
 =end
+    Magick::Image.new(1,1,Magick::HatchFill.new('#0000')).first.to_blob
   end
 end
