@@ -7,5 +7,10 @@
   <td class="actions">
     <%= f.submit %>
   </td>
+  <td class="actions">
+    <% unless quote.id.nil? %>
+    <%= link_to 'Destroy', quote, confirm: 'Are you sure?', method: :delete %>
+    <% end %>
+  </td>
 </tr>
 <% end %>
