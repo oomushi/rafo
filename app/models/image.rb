@@ -31,7 +31,7 @@ class Image < ActiveRecord::Base
     Zip::Archive.open_buffer(zip.read) do |zf|
       zf.each do |ze|
         if ze.name =~ /\.xml$/
-          Hash.from_xml(ze.read)["root"]['img'].each do |img|
+          Hash.from_xml(ze.read)["root"]['img'].each do |img| # TODO con una sola immagine va in errore
             s="build_#{img['type']}".to_sym
             raise "file not correct"+s unless methods.include? s # TODO gestire questa eccezione
             send s, {
@@ -57,10 +57,14 @@ class Image < ActiveRecord::Base
 ly lx cx rx ry
    dl dx dr
       dy )
+    nill=Magick::Image.new 1,1 do |i|
+      i.format='PNG'
+      i.background_color = '#0000'
+    end
     a=hash.map do |i|
       img=self.send i.to_sym
       if img.nil?
-        Magick::Image.new 1,1,Magick::HatchFill.new('#0000')
+        nill
       else
         Magick::Image.read_inline(Base64.encode64 img.file).first
       end
@@ -85,28 +89,31 @@ ly lx cx rx ry
     offB=oB+hash["dy"].rows
     offX=oX+hash["ly"].columns
     offD=oD+hash["ry"].columns
-    w+=offD+offX
-    h+=offY+offB
-    w=[w-hash["uy"].columns,w-hash["dy"].columns].min/2
-    h=[h-hash["ly"].rows,h-hash["ry"].rows].min/2
+    w2=offD+offX+w
+    h2=offY+offB+h
+    w=[w2-hash["uy"].columns,w2-hash["dy"].columns].min/2
+    h=[h2-hash["ly"].rows,h2-hash["ry"].rows].min/2
     if w<0
       offX-=w
       offD-=w-1
-      w=[hash["uy"].columns,hash["dy"].columns].max
+      w2=[hash["uy"].columns,hash["dy"].columns].max
     end
     if h<0
       offY-=h
       offB-=h-1
-      h=[hash["ly"].rows,hash["ry"].rows].max
+      h2=[hash["ly"].rows,hash["ry"].rows].max
     end
-    buff=Magick::Image.new w,h,Magick::HatchFill.new('#0000')
+    buff=Magick::Image.new w2,h2 do |i|
+      i.format='PNG'
+      i.background_color = '#0000'
+    end
     buff.composite! hash["ul"],offX-hash["ul"].columns,offY-hash["ul"].rows, Magick::OverCompositeOp
     i=offX
     iTime.times do
       buff.composite! hash["ux"],i, offY-hash["ux"].rows, Magick::OverCompositeOp 
       i+=hash["ux"].columns
     end
-    buff.composite! hash["ur"],w- offD,offY-hash["ur"].rows, Magick::OverCompositeOp
+    buff.composite! hash["ur"],w2 - offD,offY-hash["ur"].rows, Magick::OverCompositeOp
     i=offY
     jTime.times do
       buff.composite! hash["lx"],offX-hash["lx"].columns,i, Magick::OverCompositeOp
@@ -123,22 +130,21 @@ ly lx cx rx ry
     end
     i=offY
     kTime.times do
-      buff.composite! hash["rx"],w-offD,i, Magick::OverCompositeOp
+      buff.composite! hash["rx"],w2-offD,i, Magick::OverCompositeOp
       i+=hash["rx"].rows
     end
-    buff.composite! hash["dl"],offX-hash["dl"].columns,h-offB, Magick::OverCompositeOp
+    buff.composite! hash["dl"],offX-hash["dl"].columns,h2-offB, Magick::OverCompositeOp
     i=offX
     lTime.times do
-      buff.composite! hash["dx"],i,h-offB, Magick::OverCompositeOp
+      buff.composite! hash["dx"],i,h2-offB, Magick::OverCompositeOp
       i+=hash["dx"].columns
     end
-    buff.composite! hash["dr"],w-offD,h-offB, Magick::OverCompositeOp
-    buff.composite! hash["uy"],(w-hash["uy"].columns)/2,offY-hash["uy"].rows-oY, Magick::OverCompositeOp
-    buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h-hash["ly"].rows)/2, Magick::OverCompositeOp
-    buff.composite! hash["ry"],w-offD+oD,(h-hash["ry"].rows)/2, Magick::OverCompositeOp
-    buff.composite! hash["dy"],(w-hash["dy"].columns)/2,h-offB+oB, Magick::OverCompositeOp
+    buff.composite! hash["dr"],w2-offD,h2-offB, Magick::OverCompositeOp
+    buff.composite! hash["uy"],(w2-hash["uy"].columns)/2,offY-hash["uy"].rows-oY, Magick::OverCompositeOp
+    buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h2-hash["ly"].rows)/2, Magick::OverCompositeOp
+    buff.composite! hash["ry"],w2-offD+oD,(h2-hash["ry"].rows)/2, Magick::OverCompositeOp
+    buff.composite! hash["dy"],(w2-hash["dy"].columns)/2,h2-offB+oB, Magick::OverCompositeOp
     # TODO scrivere testo
-    buff.format='PNG'
     buff.to_blob
   end
 end
