@@ -11,6 +11,11 @@
   <% if @current_user %>
     Logged in as <%= @current_user.email %>.
     <%= link_to "Log out", logout_path %>
+    <nav>
+<a href="/images">Images</a>
+<a href="/icons">Icons</a>
+<a href="/quotes">Quotes</a>
+</nav>
   <% else %>
     <%= link_to "Sign up", signup_path %>
   <% end %>
@@ -19,10 +24,5 @@
     <%= content_tag :div, msg, :id => "flash_#{name}" %>
   <% end %>
 <%= yield %>
-<nav>
-<a href="/images">Images</a>
-<a href="/icons">Icons</a>
-<a href="/quotes">Quotes</a>
-</nav>
 </body>
 </html>
