@@ -17,21 +17,21 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
-    if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.image_ids.include? params[:id].to_i
-      @image=Image.find params[:id]
-      user=@current_user
-    elsif !@current_user.nil?
-      @image=@current_user.images.random
-      user=@current_user
+    if @current_user.nil? and (!params[:id].to_i.zero? or User.find_by_username(params[:id]).nil?)
+      redirect_to '/login' 
     else
-      redirect_to '/login' if !params[:id].kind_of? String or User.find_by_username(params[:id]).nil?
-      user=User.find_by_username params[:id]
-      @image=user.images.random
+      if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.image_ids.include? params[:id].to_i
+        @image=Image.find params[:id]
+        user=@current_user
+      else
+        user=User.find_by_username params[:id]
+        @image=user.images.random
+      end
+      @image.text=user.quotes.random
+      send_data(@image.to_img(request),
+                :type  => 'image/png',
+                :disposition => 'inline')
     end
-    @image.text=user.quotes.random
-    send_data(@image.to_img(request),
-              :type  => 'image/png',
-              :disposition => 'inline')
   end
 
   # GET /images/new
