@@ -23,7 +23,8 @@ class ImagesController < ApplicationController
     elsif !@current_user.nil?
       @image=@current_user.images.random
       user=@current_user
-    else # TODO se l'id c'è ma non è uno username dovrebbe andare in errore
+    else
+      redirect_to '/login' if !params[:id].kind_of? String or User.find_by_username(params[:id]).nil?
       user=User.find_by_username params[:id]
       @image=user.images.random
     end

@@ -24,6 +24,7 @@ class IconsController < ApplicationController
       @icon=@current_user.icons.random
       user=@current_user
     else
+      redirect_to '/login' if !params[:id].kind_of? String or User.find_by_username(params[:id]).nil?
       user=User.find_by_username params[:id]
       @image=user.icons.random
     end
