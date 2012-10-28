@@ -5,4 +5,7 @@ class Quote < ActiveRecord::Base
       find(:first, :offset =>rand(c))
     end
   end
+  def transform request
+    self.text.sub('~h',request.remote_ip).sub('~b',request.env['HTTP_USER_AGENT'] )
+  end
 end

@@ -23,12 +23,12 @@ class ImagesController < ApplicationController
     elsif !@current_user.nil?
       @image=@current_user.images.random
       user=@current_user
-    else
+    else # TODO se l'id c'è ma non è uno username dovrebbe andare in errore
       user=User.find_by_username params[:id]
       @image=user.images.random
     end
     @image.text=user.quotes.random
-    send_data(@image.to_img,
+    send_data(@image.to_img(request),
               :type  => 'image/png',
               :disposition => 'inline')
   end
