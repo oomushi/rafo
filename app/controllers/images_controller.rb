@@ -49,7 +49,7 @@ class ImagesController < ApplicationController
   # POST /images.json
   def create
     @image = Image.new(params[:image])
-
+    
     respond_to do |format|
       if @image.save
         format.html { redirect_to images_url, notice: 'Image was successfully created.' }
@@ -61,6 +61,14 @@ class ImagesController < ApplicationController
         }
         format.json { render json: @image.errors, status: :unprocessable_entity }
       end
+    end
+  rescue => e
+    respond_to do |format|
+      format.html {
+        flash[:error] = e.message
+        redirect_to images_url
+      }
+      format.json { render json: @image.errors, status: :unprocessable_entity }
     end
   end
 

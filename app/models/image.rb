@@ -35,14 +35,14 @@ class Image < ActiveRecord::Base
           if doc.kind_of?(Array)
             doc.each do |img|
               s="build_#{img['type']}".to_sym
-              raise "file not correct" unless methods.include? s # TODO gestire questa eccezione
+              raise "file not correct" unless methods.include? s
               send s, {
                 :file=>zf.fopen(img['src']).read,
                 :content_type=>'image/png' }
             end
           else
             s="build_#{doc['type']}".to_sym
-            raise "file not correct" unless methods.include? s # TODO gestire questa eccezione
+            raise "file not correct" unless methods.include? s
             send s, {
                 :file=>zf.fopen(doc['src']).read,
                 :content_type=>'image/png' }
