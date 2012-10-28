@@ -31,12 +31,21 @@ class Image < ActiveRecord::Base
     Zip::Archive.open_buffer(zip.read) do |zf|
       zf.each do |ze|
         if ze.name =~ /\.xml$/
-          Hash.from_xml(ze.read)["root"]['img'].each do |img| # TODO con una sola immagine va in errore
-            s="build_#{img['type']}".to_sym
-            raise "file not correct"+s unless methods.include? s # TODO gestire questa eccezione
+          doc=Hash.from_xml(ze.read)["root"]['img']
+          if doc.kind_of?(Array)
+            doc.each do |img|
+              s="build_#{img['type']}".to_sym
+              raise "file not correct" unless methods.include? s # TODO gestire questa eccezione
+              send s, {
+                :file=>zf.fopen(img['src']).read,
+                :content_type=>'image/png' }
+            end
+          else
+            s="build_#{doc['type']}".to_sym
+            raise "file not correct" unless methods.include? s # TODO gestire questa eccezione
             send s, {
-              :file=>zf.fopen(img['src']).read,
-              :content_type=>'image/png' }
+                :file=>zf.fopen(doc['src']).read,
+                :content_type=>'image/png' }
           end
           break
         end
@@ -50,7 +59,7 @@ class Image < ActiveRecord::Base
     end
   end
 
-  def to_img
+  def to_img request
     hash=%w(
       uy
    ul ux ur
@@ -70,7 +79,14 @@ ly lx cx rx ry
       end
     end
     hash = Hash[hash.zip(a)]
-    l,a=100,300 # TODO da ricavare
+    d = Magick::Draw.new do
+      self.pointsize = 16
+      self.font_family = "Helvetica"
+      self.font_weight = Magick::BoldWeight
+      self.stroke = 'none'
+    end
+    size=d.get_multiline_type_metrics @string.transform request
+    l,a=size.width.ceil,size.height.ceil
     mTimeX=(1.0*l/hash["cx"].columns).ceil
     mTimeY=(1.0*a/hash["cx"].rows).ceil
     w=mTimeX*hash["cx"].columns.lcm(hash["dx"].columns.lcm hash["ux"].columns)
@@ -144,7 +160,7 @@ ly lx cx rx ry
     buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h2-hash["ly"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["ry"],w2-offD+oD,(h2-hash["ry"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["dy"],(w2-hash["dy"].columns)/2,h2-offB+oB, Magick::OverCompositeOp
-    # TODO scrivere testo
+    buff.annotate d,w2,h2,offX,offY+16, @string.transform(request)
     buff.to_blob
   end
 end
