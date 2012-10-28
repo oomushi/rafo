@@ -85,7 +85,8 @@ ly lx cx rx ry
       self.font_weight = Magick::BoldWeight
       self.stroke = 'none'
     end
-    size=d.get_multiline_type_metrics @string.transform request
+    text=@string.transform request
+    size=d.get_multiline_type_metrics text
     l,a=size.width.ceil,size.height.ceil
     mTimeX=(1.0*l/hash["cx"].columns).ceil
     mTimeY=(1.0*a/hash["cx"].rows).ceil
@@ -160,7 +161,7 @@ ly lx cx rx ry
     buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h2-hash["ly"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["ry"],w2-offD+oD,(h2-hash["ry"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["dy"],(w2-hash["dy"].columns)/2,h2-offB+oB, Magick::OverCompositeOp
-    buff.annotate d,w2,h2,offX,offY+16, @string.transform(request) # TODO Non stampo i caratteri strani
+    buff.annotate d,w2,h2,offX,offY+16, text # TODO Non stampo i caratteri strani
     buff.to_blob
   end
 end
