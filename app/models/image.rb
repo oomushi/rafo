@@ -81,7 +81,7 @@ ly lx cx rx ry
     hash = Hash[hash.zip(a)]
     d = Magick::Draw.new do
       self.pointsize = 16
-      self.font_family = "Arial"
+      self.font_family = "FreeSans"
       self.font_weight = Magick::BoldWeight
       self.stroke = 'none'
     end
@@ -90,8 +90,8 @@ ly lx cx rx ry
     l,a=size.width.ceil,size.height.ceil
     mTimeX=(1.0*l/hash["cx"].columns).ceil
     mTimeY=(1.0*a/hash["cx"].rows).ceil
-    w=mTimeX*hash["cx"].columns.lcm(hash["dx"].columns.lcm hash["ux"].columns)
-    h=mTimeY*hash["cx"].rows.lcm( hash["lx"].rows.lcm hash["rx"].rows)
+    w=(mTimeX*hash["cx"].columns).lcm(hash["dx"].columns.lcm hash["ux"].columns)
+    h=(mTimeY*hash["cx"].rows).lcm( hash["lx"].rows.lcm hash["rx"].rows)
     mTimeX=w/hash["cx"].columns
     mTimeY=h/hash["cx"].rows
     iTime=w/hash["ux"].columns
