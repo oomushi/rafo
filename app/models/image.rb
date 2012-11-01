@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Image < ActiveRecord::Base
   belongs_to :user
   belongs_to :uy, :class_name=>"Blob", :foreign_key=>"uy_id"
@@ -81,7 +82,7 @@ ly lx cx rx ry
     hash = Hash[hash.zip(a)]
     d = Magick::Draw.new do
       self.pointsize = 16
-      self.font_family = "FreeSans"
+      self.font = "app/assets/fonts/sazanami-gothic.ttf"
       self.font_weight = Magick::BoldWeight
       self.stroke = 'none'
     end
@@ -161,7 +162,7 @@ ly lx cx rx ry
     buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h2-hash["ly"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["ry"],w2-offD+oD,(h2-hash["ry"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["dy"],(w2-hash["dy"].columns)/2,h2-offB+oB, Magick::OverCompositeOp
-    buff.annotate d,w2,h2,offX,offY+16, text # TODO Non stampo i caratteri strani
+    buff.annotate d,w2,h2,offX,offY+16, text
     buff.to_blob
   end
 end
