@@ -21,11 +21,10 @@ class IconsController < ApplicationController
     else
       if !params[:id].to_i.zero? and !@current_user.nil? and @current_user.icon_ids.include? params[:id].to_i
         @icon=Icon.find params[:id]
-        user=@current_user
       else
         redirect_to '/login' if !params[:id].kind_of? String or User.find_by_username(params[:id]).nil?
         user=User.find_by_username params[:id]
-        @image=user.icons.random
+        @icon=user.icons.random
       end
       send_data(@icon.blob.file,
                :type  => @icon.blob.content_type,
