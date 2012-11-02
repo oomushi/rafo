@@ -163,7 +163,7 @@ logger.debug "\t\t#{a}"
     buff.composite! hash["ly"],offX-hash["ly"].columns-oX,(h2-hash["ly"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["ry"],w2-offD+oD,(h2-hash["ry"].rows)/2, Magick::OverCompositeOp
     buff.composite! hash["dy"],(w2-hash["dy"].columns)/2,h2-offB+oB, Magick::OverCompositeOp
-    buff.annotate d,w2,h2,offX+((mTimeX*hash["cx"].columns-l)/2),offY+16+((mTimeY*hash["cx"].rows-a)/2), text
+    buff.annotate d,w2,h2,offX+((mTimeX*hash["cx"].columns-l)/2),offY+a+((mTimeY*hash["cx"].rows-a)/2), text
     buff.to_blob
   end
 end
