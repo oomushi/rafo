@@ -82,13 +82,14 @@ ly lx cx rx ry
     hash = Hash[hash.zip(a)]
     d = Magick::Draw.new do
       self.pointsize = 16
-      self.font = "app/assets/fonts/sazanami-gothic.ttf"
+      self.font = "app/assets/fonts/code2000.ttf"
       self.font_weight = Magick::BoldWeight
       self.stroke = 'none'
     end
     text=@string.transform request
     size=d.get_multiline_type_metrics text
     l,a=size.width.ceil,size.height.ceil
+logger.debug "\t\t#{a}"
     mTimeX=(1.0*l/hash["cx"].columns).ceil
     mTimeY=(1.0*a/hash["cx"].rows).ceil
     w=(mTimeX*hash["cx"].columns).lcm(hash["dx"].columns.lcm hash["ux"].columns)
