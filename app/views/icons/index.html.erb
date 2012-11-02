@@ -1,5 +1,5 @@
 <h1>Listing icons</h1>
-
+<span class="link"><%= link_to 'your random avatar', '/icons/'+@current_user.username+'.png' %></span>
 <table>
 <% @icons.each_with_index do |icon,i| %>
   <% if i%3==0 %><tr><% end %>
