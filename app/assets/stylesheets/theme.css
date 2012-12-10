@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Cretino';
+    src: url('/assets/cretino.eot');
+    src: url('/assets/cretino.woff') format('woff'),
+         url('/assets/cretino.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+
+}
+.macrobug{
+  font-family: Cretino;
+  font-size:125%;
+  font-style:normal;
+}
