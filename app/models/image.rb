@@ -82,7 +82,7 @@ ly lx cx rx ry
     hash = Hash[hash.zip(a)]
     d = Magick::Draw.new do
       self.pointsize = 16
-      self.font = "app/assets/fonts/code2000.ttf"
+      self.font = "vendor/assets/fonts/code2000.ttf"
       self.font_weight = Magick::BoldWeight
       self.stroke = 'none'
     end
