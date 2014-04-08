@@ -24,7 +24,7 @@ gem 'rmagick', :require => 'RMagick'
 gem 'zipruby'
 
 # To use ActiveModel has_secure_password
-gem "bcrypt-ruby", :require => "bcrypt"
+gem "bcrypt"
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
